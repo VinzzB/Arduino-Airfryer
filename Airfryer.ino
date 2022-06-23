@@ -1,5 +1,10 @@
-
 /*
+ * Copyright (c) 2022, Vincent Bloemen (VinzzB)
+ * All rights reserved.
+ *   
+ * This source code is licensed under the Apache 2.0 license found in the
+ * LICENSE file in the root directory of this source tree. 
+ * 
  * 
  * Philips Airfryer. Model: HD9240
  * Creator: Vincent Bloemen (VinzzB / vinzz.be)
