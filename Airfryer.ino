@@ -7,7 +7,9 @@
  * 
  * 
  * Philips Airfryer. Model: HD9240
- * Creator: Vincent Bloemen (VinzzB / vinzz.be)
+ * Creator: Vincent Bloemen (VinzzB / https://vinzz.be)
+ * Github: https://github.com/VinzzB/Arduino-Airfryer
+ * Simulator: https://wokwi.com/projects/335149333902000724
  * 
  * Airfryer components :
  * 1x 230Vc motor
@@ -62,8 +64,8 @@ const int preHeatTimeout  = 300;   //in seconds!
 const int tempSteps[]     = {1,  5, 10,  20,  30,  40,  50,  60}; //rotary intervals. (slow > fast rotations)
 const int timeSteps[]     = {1, 15, 60, 120, 180, 240, 300, 360}; //rotary intervals. (slow > fast rotations)
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); //find I2C address with I2C_scanner script
-//LiquidCrystal_I2C lcd(0x20, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
+//LiquidCrystal_I2C lcd(0x27, 16, 2); //find I2C address with I2C_scanner script
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); //0x20 & 0x27
 
 /* FOODLIST */
 //max steps per product. See MAX_STEPS in Product.h
@@ -193,12 +195,6 @@ void goToSleep() {
 
 void wakeUpInterrupt() {/* Just an empty wake-up interrupt! */}
 
-//only allow additions and substractions above zero.
-byte safeAdd(byte value, int addValue, byte maxValue) { 
-    byte newValue = value + addValue;
-    return value == 0 && addValue < 0 ? 0 : newValue > maxValue ? maxValue : newValue;
-}
-
 short readRotaryPosition() {
   
   // Read rotary state
@@ -239,7 +235,7 @@ void userInteraction() {
           screen.current = SCREEN_MENU_SAVE;
           screen.printSaveDialog(dialogResult = 0);          
         } else {
-          menuProductIdx = safeAdd(menuProductIdx, direction, cookbook.count()-1);
+          menuProductIdx = constrain(menuProductIdx + direction, 0, cookbook.count()-1);
           cookbook.readProduct(menuProductIdx, &product);
           screen.printMenu(product.name);        
         }
@@ -400,7 +396,7 @@ void userInteraction() {
         CookStep* currStep = engine.isRunning() ? engine.getStep(menuStepIdx) : &product.steps[menuStepIdx];
         
         switch(screen.current) {
-          case SCREEN_EDIT_STEP: menuStepIdx = safeAdd(menuStepIdx, direction, product.stepsCount - 1); break;
+          case SCREEN_EDIT_STEP: menuStepIdx = constrain(menuStepIdx + direction, 0, product.stepsCount - 1); break;
           case SCREEN_EDIT_BEEP: currStep->beep = !currStep->beep ; break;
           case SCREEN_EDIT_TIME: { //brackets needed for scoped var!
             int newTime = currStep->timeInSec + (direction * timeSteps[abs(rotaryPosition)-1]);

@@ -12,17 +12,17 @@
 #include <math.h>
 
 FryEngine::FryEngine(byte heaterPin, byte fanPin, byte temperaturePin, int preHeatTimeout, callback stepCompletedCallBack) {
-	_stepCompletedCallBackPtr = stepCompletedCallBack;
-	_heaterPin = heaterPin;
-	_fanPin = fanPin;
-	_temperaturePin = temperaturePin;
-	_refreshInterval = 500;
-	_currentStep = 0;
+  _stepCompletedCallBackPtr = stepCompletedCallBack;
+  _heaterPin = heaterPin;
+  _fanPin = fanPin;
+  _temperaturePin = temperaturePin;
+  _refreshInterval = 500;
+  _currentStep = 0;
   _preHeatTimeout = preHeatTimeout;
-	pinMode(_heaterPin,OUTPUT);
-	pinMode(_fanPin,OUTPUT);
-	pinMode(_temperaturePin, INPUT); 		
-	resetTemperature();
+  pinMode(_heaterPin,OUTPUT);
+  pinMode(_fanPin,OUTPUT);
+  pinMode(_temperaturePin, INPUT);
+  resetTemperature();
 }
 
 byte FryEngine::resetTemperature() {
@@ -61,21 +61,21 @@ void FryEngine::stop() {
 }
 
 unsigned int FryEngine::getElapsedSeconds() {
-	return _runningSince == 0 ? 0 : (millis() - _runningSince) / 1000 ;
+  return _runningSince == 0 ? 0 : (millis() - _runningSince) / 1000 ;
 }
 
 unsigned int FryEngine::getRemainingSeconds() {
-	int allSecondsTillCurrentStep = 0;
-	if(!isRunning()) return 0;
-	for (int x = 0; x < getCurrentStepIdx(); x++) {
-			allSecondsTillCurrentStep += _steps[x].timeInSec;
-	}
-	int remainingTime = getCurrentStep()->timeInSec - (getElapsedSeconds()-allSecondsTillCurrentStep );	
-	return remainingTime < 0 ? 0 : remainingTime;
+  int allSecondsTillCurrentStep = 0;
+  if(!isRunning()) return 0;
+  for (int x = 0; x < getCurrentStepIdx(); x++) {
+      allSecondsTillCurrentStep += _steps[x].timeInSec;
+  }
+  int remainingTime = getCurrentStep()->timeInSec - (getElapsedSeconds()-allSecondsTillCurrentStep );
+  return remainingTime < 0 ? 0 : remainingTime;
 }
 
 CookStep* FryEngine::getCurrentStep() {
-	return &_steps[_currentStep];
+  return &_steps[_currentStep];
 }
 
 CookStep* FryEngine::getStep(byte stepIdx) {
@@ -95,11 +95,11 @@ void FryEngine::setPreHeat(bool value){
 }
 
 byte FryEngine::getCurrentStepIdx() {
-	return _currentStep;
+  return _currentStep;
 }
 
 byte FryEngine::getStepsCount() {
-	return _stepsCount;
+  return _stepsCount;
 }
 
 void FryEngine::updateTemperature() {
@@ -107,42 +107,42 @@ void FryEngine::updateTemperature() {
   double temp;
   temp = log((100000.0/30)*((1024.0/val-1))); //100000 = 100k thermistor.
   temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * temp * temp ))* temp );
-  temp -= 273.15;            
-  _temperatures[_tempIdx++ % 10] = constrain(temp, 0, 255); //  temp > 255 ? 255 : temp < 0 ? 0 : temp;
+  temp -= 273.15;
+  _temperatures[_tempIdx++ % 10] = constrain(temp, 0, 255);
 }
-				
-byte FryEngine::getTemperature() {	
-	int totTemp = 0;
-	for(int x = 0; x <10; x++) {
-		totTemp += (byte)_temperatures[x];
-	}	
-	return totTemp / 10;
+
+byte FryEngine::getTemperature() {
+  int totTemp = 0;
+  for(int x = 0; x <10; x++) {
+    totTemp += (byte)_temperatures[x];
+  }
+  return totTemp / 10;
 }
 
 bool FryEngine::isRunning() {
-	return _runningSince > 0;
+  return _runningSince > 0;
 }
 
 bool FryEngine::timer() {
-	unsigned long refreshMillis = millis();
-	if (refreshMillis - _refreshedOn >= _refreshInterval) {
-		//do refresh actions!
-		_refreshedOn = refreshMillis;
+  unsigned long refreshMillis = millis();
+  if (refreshMillis - _refreshedOn >= _refreshInterval) {
+    //do refresh actions!
+    _refreshedOn = refreshMillis;
     
     //update current device temperature
     updateTemperature();
     
-    //is engine running?   
-		if (isRunning()) {	
+    //is engine running?
+    if (isRunning()) {
       
-      //is pre heating?      
+      //is pre heating?
       if(getPreHeat()) {
           //reset running time untill Pre Heat mode is deactivated by user.
           _runningSince = millis();          
           unsigned int secPassed = (refreshMillis - _preHeatReachedTime) / 1000;
-          //stop the engine when five minutes passed since temperature was reached without any user interaction.            
-          if(_preHeatReached && secPassed >= _preHeatTimeout){              
-              stop();              
+          //stop the engine when [PreHeatTimeout] seconds passed since temperature was reached without any user interaction.
+          if(_preHeatReached && secPassed >= _preHeatTimeout){
+              stop();
               return true;
           }
           //pre heat complete?
@@ -153,49 +153,49 @@ bool FryEngine::timer() {
           }
       }
       
-			//Is Step complete?
-			if (getRemainingSeconds() <= 0){
-				int completedStep = _currentStep;
-				//go to next step?
-				while(++_currentStep < getStepsCount()-1 && getCurrentStep()->timeInSec==0) { }
-				//set fan OFF when temperature is zero, 
-				powerFan(getCurrentStep()->temp>0);
+      //Is Step complete?
+      if (getRemainingSeconds() <= 0){
+        int completedStep = _currentStep;
+        //go to next step?
+        while(++_currentStep < getStepsCount()-1 && getCurrentStep()->timeInSec==0) { }
+        //set fan OFF when temperature is zero, 
+        powerFan(getCurrentStep()->temp>0);
 
-				//last step done?
-				if(_currentStep >= getStepsCount()-1) {
-					stop();									
-				}
+        //last step done?
+        if(_currentStep >= getStepsCount()-1) {
+          stop();
+        }
        //custom callback (eg for buzzer)
        if(_currentStep < getStepsCount())
-				  _stepCompletedCallBackPtr(completedStep);				
-			}
-			//check if fryer is still on temperature.			
-			adjustHeat();
-		}	
-		return true;
-	}
-	return false; //important!
+          _stepCompletedCallBackPtr(completedStep);
+      }
+      //check if fryer is still on temperature.
+      adjustHeat();
+    }  
+    return true;
+  }
+  return false;
 }
 
 bool FryEngine::isOnTemperature() {
-	return _isOnTemp;
+  return _isOnTemp;
 }
 
 void FryEngine::adjustHeat() {
-	if(isRunning()){
-		byte currentTemp = getTemperature();
-		byte prefferedTemp = getCurrentStep()->temp;
-		//is temperature greater than the preffered temperature (+5 offset)?
-		//or is the fryer at the preffered temperature and is the current temperature still above the prefferedTemp minus the offset (-5) 
-		_isOnTemp = (currentTemp >= prefferedTemp) || (_isOnTemp && currentTemp > prefferedTemp-5);		
-		powerHeater( !isOnTemperature() ); 
-	}
-}		
+  if(isRunning()){
+    byte currentTemp = getTemperature();
+    byte prefferedTemp = getCurrentStep()->temp;
+    //is temperature greater than the preffered temperature
+    //or temperature still above the prefferedTemp minus the offset (-5) 
+    _isOnTemp = (currentTemp >= prefferedTemp) || (_isOnTemp && currentTemp > prefferedTemp-TEMP_OFFSET_LOW);
+    powerHeater( !isOnTemperature() ); 
+  }
+}
 
 void FryEngine::powerFan(bool power) {
-	digitalWrite(_fanPin, power);
+  digitalWrite(_fanPin, power);
 }
 
 void FryEngine::powerHeater(bool power) {
-	digitalWrite(_heaterPin, power);
+  digitalWrite(_heaterPin, power);
 }

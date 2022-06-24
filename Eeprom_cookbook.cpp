@@ -16,33 +16,30 @@ EEPROM_Cookbook::EEPROM_Cookbook(int max_eeprom_bytes) {
 }
 
 int EEPROM_Cookbook::getProductAddress(byte productIdx) {
-    return sizeof(eeprom_check) + (productIdx * productSize);
+  return sizeof(eeprom_check) + (productIdx * productSize);
 }
 
 void EEPROM_Cookbook::readProduct(byte productIdx, Product* p) {
   
-    int pos =  getProductAddress(productIdx);
-
-    //read name
-    char name[PRODUCTNAME_MAX_LEN] = {};    
-    for(byte x = 0; x < PRODUCTNAME_MAX_LEN; x++) 
-      name[x] =EEPROM.read(pos + x);
-    
-    memcpy(p->name, name, strlen(name)+1);  
-    //p->setName(name);
-    pos += PRODUCTNAME_MAX_LEN - 1; // 14;
-    
-    p->preHeat = EEPROM.read(pos++);
-    p->stepsCount = EEPROM.read(pos++);
-    
-    for(int x = 0; x < p->stepsCount; x++) {
-      CookStep tempStep = {};      
-      EEPROM.get(pos, tempStep);
-      memcpy(&p->steps[x], &tempStep, sizeof(tempStep));
-
-      pos += sizeof(CookStep); // 4;
-    }
-
+  int pos =  getProductAddress(productIdx);
+  //read name
+  char name[PRODUCTNAME_MAX_LEN] = {};    
+  for(byte x = 0; x < PRODUCTNAME_MAX_LEN; x++) 
+    name[x] =EEPROM.read(pos + x);
+  
+  memcpy(p->name, name, strlen(name)+1);  
+  //p->setName(name);
+  pos += PRODUCTNAME_MAX_LEN - 1; // 14;
+  
+  p->preHeat = EEPROM.read(pos++);
+  p->stepsCount = EEPROM.read(pos++);
+  
+  for(int x = 0; x < p->stepsCount; x++) {
+    CookStep tempStep = {};      
+    EEPROM.get(pos, tempStep);
+    memcpy(&p->steps[x], &tempStep, sizeof(tempStep));
+    pos += sizeof(CookStep); // 4;
+  }
 }
 
 void EEPROM_Cookbook::writeProduct(byte productIdx, Product p) {
@@ -72,8 +69,8 @@ void EEPROM_Cookbook::writeCharArray(int address, char* text, int len) {
 }
 
 int EEPROM_Cookbook::count() {
-    int maxBytes = _max_eeprom_bytes - sizeof(eeprom_check);
-    return maxBytes / productSize;
+  int maxBytes = _max_eeprom_bytes - sizeof(eeprom_check);
+  return maxBytes / productSize;
 }
 
 

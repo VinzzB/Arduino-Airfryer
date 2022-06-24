@@ -14,8 +14,7 @@
   #include "Product.h"
   #define BELL_CHAR 0x00
   #define HEAT_CHAR 0x01
-  //#define PRODUCTNAME_MAX_LEN 15
-  
+   
   //enum screens
   #define SCREEN_MENU 0
   #define SCREEN_MENU_SAVE 1

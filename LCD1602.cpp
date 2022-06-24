@@ -54,7 +54,7 @@ void LCD1602::init() {
 void LCD1602::lcdPowerMode(bool on) {
   if(on) lcd.on();
   else lcd.off();   
-  lcd.setBacklight(on ? 255 :0);  
+  lcd.setBacklight(on ? 255 :0);
 }
 
 void LCD1602::printDeviceTemperature(byte temperature, byte temperatureSign) {
@@ -63,15 +63,15 @@ void LCD1602::printDeviceTemperature(byte temperature, byte temperatureSign) {
 }
 
 void LCD1602::printCelcius(byte temp, byte sign, bool isDeviceTemp) {
-  bool isEditMode = current == SCREEN_EDIT_PREHEAT && isDeviceTemp;  
+  bool isEditMode = current == SCREEN_EDIT_PREHEAT && isDeviceTemp;
   char usedSign = menuBlinkItem && isEditMode ? '_' : sign;
   char buffer[7]; // !000°C = 6 chars + null terminator;
-  sprintf(buffer, "%c%3d%cC", usedSign, temp, (char)223); 
+  sprintf(buffer, "%c%3d%cC", usedSign, temp, (char)223);
   lcd.print(buffer);
 }
 
 //Prints the time at the current position on the screen. consumes 5 digits on display!
-void LCD1602::printTimeOnLcd(int &minutes, int &seconds) {    
+void LCD1602::printTimeOnLcd(int &minutes, int &seconds) {
   char time[7];
   sprintf(time, "%02d:%02d" , minutes, seconds);
   lcd.print(time);  
@@ -101,9 +101,9 @@ void LCD1602::calcTime(long allSeconds, int &outM, int &outS) {
 }
 
 void  LCD1602::printTemperature(byte temp) {
-  if(current == SCREEN_EDIT_TEMP && menuBlinkItem) 
+  if(current == SCREEN_EDIT_TEMP && menuBlinkItem)
     printLine(F("@"), 6);
-  else      
+  else
     printCelcius(temp,'@', false); 
 }
 
@@ -117,8 +117,8 @@ void LCD1602::printStep(byte stepIdx) {
     clearChars(3);
   } else {
     char stepChars[4];
-    sprintf(stepChars, "S%02d", stepIdx+1);    
-    lcd.print(stepChars);    
+    sprintf(stepChars, "S%02d", stepIdx+1);
+    lcd.print(stepChars);
   }  
 }
 
@@ -136,7 +136,7 @@ void LCD1602::printStepLine(byte stepIdx, long secToGo, byte temp, bool beep) {
   lcd.setCursor(4,1); 
   printTime(secToGo,current == SCREEN_EDIT_TIME);
   lcd.setCursor(10,1);
-  printTemperature(temp);     
+  printTemperature(temp);
 }
 
 void LCD1602::printProductLine(char* product, byte deviceTemperature, byte heatingSign){
@@ -183,19 +183,17 @@ void LCD1602::printLine(const __FlashStringHelper* item, byte maxLen) {
 }
 
 void LCD1602::printLine(char* item, byte maxLen) {
-  byte len = lcd.print(item);  
-
+  byte len = lcd.print(item);
   clearChars(maxLen - len); 
 }
 
 void LCD1602::printSaveDialog(short option = 0) {
-  lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print(F("Save changes?"));
+  printLine(F("Save changes?"),16);
   lcd.setCursor(0,1);
-  printDialogOption(option == 1,F("YES"));
-  printDialogOption(option == 0,F("NO"));
-  printDialogOption(option == -1,F("ABORT"));  
+  printDialogOption(option == DIALOG_RESULT_YES, F("YES"));
+  printDialogOption(option == DIALOG_RESULT_NO, F("NO"));
+  printDialogOption(option == DIALOG_RESULT_ABORT, F("ABORT"));  
 }
 
 void LCD1602::printDialogOption(bool checked, const __FlashStringHelper* text) {
