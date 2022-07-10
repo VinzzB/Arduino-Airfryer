@@ -98,10 +98,9 @@ void EEPROM_Cookbook::prepareEEPROM(bool force = false) {
       EEPROM.update(pos++, MAX_STEPS);
   
       for(int i = 0; i < MAX_STEPS * sizeof(CookStep); i++ )
-        EEPROM.update(pos+i, 0);
-
-      //Write eeprom check as last. (when all structs are written)
-      writeCharArray(0,eeprom_check, sizeof(eeprom_check));
+        EEPROM.update(pos+i, 0);      
     }    
+    //Write eeprom check as last. (when all structs are written)
+    writeCharArray(0,eeprom_check, sizeof(eeprom_check));
   }
 }
