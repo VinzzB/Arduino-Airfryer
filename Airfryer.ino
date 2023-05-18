@@ -65,7 +65,7 @@ const int tempSteps[]     = {1,  5, 10,  20,  30,  40,  50,  60}; //rotary inter
 const int timeSteps[]     = {1, 15, 60, 120, 180, 240, 300, 360}; //rotary intervals. (slow > fast rotations)
 
 LiquidCrystal_I2C lcd(0x27, 16, 2); //find I2C address with I2C_scanner script
-//LiquidCrystal_I2C lcd(0x20, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
+//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); //0x20 & 0x27
 
 /* FOODLIST */
 //max steps per product. See MAX_STEPS in Product.h
@@ -429,7 +429,6 @@ void userInteraction() {
             menuStepIdx = engine.getCurrentStepIdx();
           break;
         }
-        break;        
       }
     }
   }
@@ -486,7 +485,7 @@ void stepCompletedCallBack(int stepIdx) {
   
   //show next step on screen
   if (stepIdx == menuStepIdx){
-    menuStepIdx = engine.getCurrentStepIdx() ;
+    menuStepIdx = engine.getCurrentStepIdx();
   }
   
   //Buzz? (preHeat & steps with buzz option)

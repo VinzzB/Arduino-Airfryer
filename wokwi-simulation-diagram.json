@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 1,
   "author": "VinzzB (vinzz.be)",
   "editor": "wokwi",
   "parts": [
@@ -22,48 +22,48 @@
     {
       "type": "wokwi-buzzer",
       "id": "bz1",
-      "top": -198.28,
-      "left": -12.25,
+      "top": -224.17,
+      "left": -9.67,
       "rotate": 270,
       "attrs": { "volume": "0.1" }
     },
     {
       "type": "wokwi-resistor",
       "id": "r1",
-      "top": -163.8,
-      "left": 90.6,
+      "top": -187.58,
+      "left": 82.67,
       "attrs": { "value": "100" }
     },
     {
       "type": "wokwi-led",
       "id": "led1",
-      "top": -37.55,
-      "left": 158.46,
-      "rotate": 180,
+      "top": -175.37,
+      "left": 310.51,
+      "rotate": 90,
       "attrs": { "color": "blue" }
     },
     {
       "type": "wokwi-led",
       "id": "led2",
-      "top": -36.99,
-      "left": 134.03,
-      "rotate": 180,
+      "top": -238.76,
+      "left": 308.85,
+      "rotate": 90,
       "attrs": { "color": "red" }
     },
     {
       "type": "wokwi-resistor",
       "id": "r2",
-      "top": -80.25,
-      "left": 130.26,
-      "rotate": 270,
+      "top": -214.39,
+      "left": 203.28,
+      "rotate": 180,
       "attrs": { "value": "220" }
     },
     {
       "type": "wokwi-resistor",
       "id": "r3",
-      "top": -80.58,
-      "left": 145.32,
-      "rotate": 270,
+      "top": -148.27,
+      "left": 200.75,
+      "rotate": 180,
       "attrs": { "value": "220" }
     },
     {
@@ -120,24 +120,24 @@
     [ "uno:2", "encoder1:SW", "green", [ "v117.86", "h169.67" ] ],
     [ "encoder1:DT", "uno:3", "green", [ "v28.3", "h-178.84" ] ],
     [ "encoder1:CLK", "uno:4", "green", [ "v36.15", "h-198.8" ] ],
-    [ "r2:2", "uno:8", "green", [ "h-1.17", "v34.86" ] ],
+    [ "r2:2", "uno:8", "green", [ "h-42.6", "v101.82" ] ],
     [ "uno:7", "r3:2", "green", [ "v0" ] ],
     [ "uno:9", "r1:2", "green", [ "v0" ] ],
     [ "r1:1", "bz1:2", "green", [ "v0" ] ],
     [ "uno:GND.1", "bz1:1", "black", [ "v0" ] ],
     [ "r3:1", "led1:A", "green", [ "h0" ] ],
-    [ "uno:GND.1", "led1:C", "black", [ "v73.62", "h83.47" ] ],
     [ "led2:A", "r2:1", "green", [ "v0" ] ],
-    [ "uno:GND.1", "led2:C", "black", [ "v73.62", "h55.09" ] ],
-    [ "relay_Heat:IN", "uno:8", "green", [ "h0" ] ],
-    [ "relay_Heat:GND", "uno:GND.3", "black", [ "h-39.39", "v356.65", "h-127.7" ] ],
+    [ "relay_Heat:GND", "uno:GND.3", "black", [ "h-39.39", "v356.18", "h-127.7" ] ],
     [ "relay_Heat:VCC", "uno:5V", "red", [ "h-52.26", "v377.2", "h-133.83" ] ],
     [ "relay_Fan:VCC", "relay_Heat:VCC", "red", [ "h-53.7", "v-0.05" ] ],
     [ "relay_Fan:GND", "relay_Heat:GND", "black", [ "h-40.54", "v-66.59" ] ],
     [ "relay_Fan:IN", "r3:2", "green", [ "h0" ] ],
     [ "pot1:VCC", "uno:5V", "red", [ "v47.44", "h-319.89" ] ],
     [ "pot1:SIG", "uno:A1", "green", [ "v13.9", "h-282.56" ] ],
-    [ "pot1:GND", "relay_Fan:GND", "black", [ "v-8.51", "h-173.72", "v-40.5" ] ]
+    [ "pot1:GND", "relay_Fan:GND", "black", [ "v-8.51", "h-173.72", "v-40.5" ] ],
+    [ "led2:C", "relay_Heat:GND", "black", [ "h-17.13", "v-17.85", "h0.52" ] ],
+    [ "relay_Heat:IN", "r2:2", "green", [ "h0" ] ],
+    [ "led1:C", "relay_Fan:GND", "black", [ "h-18.68", "v-17.72", "h40.06" ] ]
   ],
   "serialMonitor": { "display": "always", "newline": "lf" },
   "dependencies": {}

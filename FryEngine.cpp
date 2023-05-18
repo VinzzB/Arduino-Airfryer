@@ -123,6 +123,7 @@ bool FryEngine::isRunning() {
   return _runningSince > 0;
 }
 
+//return true to process timer event in ino script.
 bool FryEngine::timer() {
   unsigned long refreshMillis = millis();
   if (refreshMillis - _refreshedOn >= _refreshInterval) {
@@ -154,19 +155,21 @@ bool FryEngine::timer() {
       }
       
       //Is Step complete?
-      if (getRemainingSeconds() <= 0){
+      if (getRemainingSeconds() <= 0){        
         int completedStep = _currentStep;
-        //go to next step?
+        //Get the next step that contains time and store the index in _currentStep.
         while(++_currentStep < getStepsCount() && getCurrentStep()->timeInSec==0) { }
-        //set fan OFF when temperature is zero, 
-        powerFan(getCurrentStep()->temp>0);
-
-        //last step done?
+        //custom callback to ino script (eg for buzzer)
+        _stepCompletedCallBackPtr(completedStep);
+        //Are we trhrough all the steps?
         if(_currentStep >= getStepsCount()) {
           stop();
+        } else {
+          //reset isOnTemp when starting a new step.
+          _isOnTemp = getTemperature() >= getCurrentStep()->temp;
+          //set fan OFF when temperature esuals zero.
+          powerFan(getCurrentStep()->temp>0);
         }
-       //custom callback (eg for buzzer)
-        _stepCompletedCallBackPtr(completedStep);
       }
       //check if fryer is still on temperature.
       adjustHeat();
