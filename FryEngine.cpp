@@ -162,12 +162,11 @@ bool FryEngine::timer() {
         powerFan(getCurrentStep()->temp>0);
 
         //last step done?
-        if(_currentStep > getStepsCount()) {
+        if(_currentStep >= getStepsCount()) {
           stop();
         }
-       //custom callback (eg for buzzer)
-       if(_currentStep < getStepsCount())
-          _stepCompletedCallBackPtr(completedStep);
+        //custom callback (eg for buzzer)       
+        _stepCompletedCallBackPtr(completedStep);
       }
       //check if fryer is still on temperature.
       adjustHeat();
