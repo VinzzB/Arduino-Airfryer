@@ -165,7 +165,7 @@ bool FryEngine::timer() {
         if(_currentStep >= getStepsCount()) {
           stop();
         }
-        //custom callback (eg for buzzer)       
+       //custom callback (eg for buzzer)
         _stepCompletedCallBackPtr(completedStep);
       }
       //check if fryer is still on temperature.
@@ -184,8 +184,8 @@ void FryEngine::adjustHeat() {
   if(isRunning()){
     byte currentTemp = getTemperature();
     byte prefferedTemp = getCurrentStep()->temp;
-    //is temperature greater than the preffered temperature
-    //or temperature still above the prefferedTemp minus the offset (-5) 
+    //is temperature greater than the preffered temperature?
+    //or was the fryer on temperature and is the current temperature still above the preffered Temperature minus the offset (-5) 
     _isOnTemp = (currentTemp >= prefferedTemp) || (_isOnTemp && currentTemp > prefferedTemp-TEMP_OFFSET_LOW);
     powerHeater( !isOnTemperature() ); 
   }

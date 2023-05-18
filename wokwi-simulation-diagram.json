@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "author": "VinzzB (vinzz.be)",
   "editor": "wokwi",
   "parts": [
@@ -100,7 +100,7 @@
       "top": -77.21,
       "left": 378.66,
       "rotate": 270,
-      "attrs": { "travelLength": "30" }
+      "attrs": { "travelLength": "30", "value": "230" }
     },
     {
       "type": "wokwi-text",

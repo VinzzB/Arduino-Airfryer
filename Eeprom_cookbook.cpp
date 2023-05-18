@@ -22,6 +22,7 @@ int EEPROM_Cookbook::getProductAddress(byte productIdx) {
 void EEPROM_Cookbook::readProduct(byte productIdx, Product* p) {
   
   int pos =  getProductAddress(productIdx);
+
   //read name
   char name[PRODUCTNAME_MAX_LEN] = {};    
   for(byte x = 0; x < PRODUCTNAME_MAX_LEN; x++) 
@@ -38,6 +39,7 @@ void EEPROM_Cookbook::readProduct(byte productIdx, Product* p) {
     CookStep tempStep = {};      
     EEPROM.get(pos, tempStep);
     memcpy(&p->steps[x], &tempStep, sizeof(tempStep));
+
     pos += sizeof(CookStep); // 4;
   }
 }
@@ -60,7 +62,6 @@ void EEPROM_Cookbook::writeProduct(byte productIdx, Product p) {
     EEPROM.put(pos, p.steps[x]);
     pos += sizeof(CookStep); // 4;
   }
-
 }
 
 void EEPROM_Cookbook::writeCharArray(int address, char* text, int len) {
@@ -98,7 +99,8 @@ void EEPROM_Cookbook::prepareEEPROM(bool force = false) {
       EEPROM.update(pos++, MAX_STEPS);
   
       for(int i = 0; i < MAX_STEPS * sizeof(CookStep); i++ )
-        EEPROM.update(pos+i, 0);      
+        EEPROM.update(pos+i, 0);
+
     }    
     //Write eeprom check as last. (when all structs are written)
     writeCharArray(0,eeprom_check, sizeof(eeprom_check));

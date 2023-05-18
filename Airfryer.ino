@@ -10,7 +10,7 @@
  * Creator: Vincent Bloemen (VinzzB / https://vinzz.be)
  * Github: https://github.com/VinzzB/Arduino-Airfryer
  * Simulator: https://wokwi.com/projects/335149333902000724
- * 
+ *
  * Airfryer components :
  * 1x 230Vc motor
  * 1x 230Vc Spiral heating coil
@@ -59,13 +59,13 @@ const byte rotaryClkPin   = 4;     //D4 = pin 06
 const bool invertRotary   = false; //swap rotary direction.
 const int buzzFrequency   = 3520;  //buzzer frequency (3520 = NOTE_A7)
 const int exitEditDelay   = 10;    //in seconds! 
-const int powerOffTimeout = 60;    //in seconds!
+const int powerOffTimeout = 60;    //in seconds! PowerOff does not work in WokWi simulation
 const int preHeatTimeout  = 300;   //in seconds!
 const int tempSteps[]     = {1,  5, 10,  20,  30,  40,  50,  60}; //rotary intervals. (slow > fast rotations)
 const int timeSteps[]     = {1, 15, 60, 120, 180, 240, 300, 360}; //rotary intervals. (slow > fast rotations)
 
-//LiquidCrystal_I2C lcd(0x27, 16, 2); //find I2C address with I2C_scanner script
-LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); //0x20 & 0x27
+LiquidCrystal_I2C lcd(0x27, 16, 2); //find I2C address with I2C_scanner script
+//LiquidCrystal_I2C lcd(0x20, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
 
 /* FOODLIST */
 //max steps per product. See MAX_STEPS in Product.h
@@ -491,7 +491,7 @@ void stepCompletedCallBack(int stepIdx) {
   
   //Buzz? (preHeat & steps with buzz option)
   if (stepIdx == PREHEAT_COMPLETE_STEP 
-  || (stepIdx >= 0 && engine.getStep(stepIdx)->beep)) {
+  || (stepIdx >= 0 && engine.getStep(stepIdx)->beep)) {    
     tone(speakerPin, buzzFrequency, 2000);
   }
 }

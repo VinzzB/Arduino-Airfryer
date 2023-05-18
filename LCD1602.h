@@ -14,7 +14,7 @@
   #include "Product.h"
   #define BELL_CHAR 0x00
   #define HEAT_CHAR 0x01
-   
+  
   //enum screens
   #define SCREEN_MENU 0
   #define SCREEN_MENU_SAVE 1
@@ -32,7 +32,7 @@
   #define DIALOG_RESULT_YES 1
   
 
-  class LCD1602 {    
+  class LCD1602 {
     
     public:
       LCD1602(LiquidCrystal_I2C& _lcd);
@@ -50,7 +50,7 @@
       byte current; //SCREEN_* Enum.
       
     private:
-      LiquidCrystal_I2C &lcd;      
+      LiquidCrystal_I2C &lcd;
       void printDeviceTemperature(byte temperature, byte temperatureSign);
       void printCelcius(byte temp, byte sign, bool isDeviceTemp);
       void printTimerTime(unsigned int elapsedSeconds);

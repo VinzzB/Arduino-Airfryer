@@ -10,7 +10,7 @@
   #define FryEngine_h
   #include "Arduino.h"
   #include "Product.h"
-
+  
   //start heater when below this offset temperature. 
   //Lower = more precision
   //Using zero could damage the relays. Use a value above 1
