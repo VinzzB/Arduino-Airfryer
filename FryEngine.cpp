@@ -157,12 +157,12 @@ bool FryEngine::timer() {
       if (getRemainingSeconds() <= 0){
         int completedStep = _currentStep;
         //go to next step?
-        while(++_currentStep < getStepsCount()-1 && getCurrentStep()->timeInSec==0) { }
+        while(++_currentStep < getStepsCount() && getCurrentStep()->timeInSec==0) { }
         //set fan OFF when temperature is zero, 
         powerFan(getCurrentStep()->temp>0);
 
         //last step done?
-        if(_currentStep >= getStepsCount()-1) {
+        if(_currentStep > getStepsCount()) {
           stop();
         }
        //custom callback (eg for buzzer)
